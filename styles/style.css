@@ -1,0 +1,103 @@
+body {
+    font-family: 'Cardo:wght@400', serif;
+}
+
+h1 {
+    text-transform: uppercase;
+    font-family: 'Cardo:wght@700', serif;
+    font-size: 1.5rem;
+    letter-spacing: .4rem;
+    padding: 7vh 0vw 0vh 10vw;
+    color: rgb(255, 255, 248);
+    text-shadow: .5rem .5rem .5rem gray;
+}
+
+p.contact {
+    padding: 0vh 0vw 80vh 12vw;
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: .1rem;
+    background-color: transparent;
+    margin: 0;
+    color: rgb(255, 255, 248);
+    text-shadow: .2rem .2rem .5rem gray;
+}
+
+a {
+    color: rgb(255, 255, 248);
+}
+
+a:hover {
+    color: red;
+}
+
+h1::first-letter, h3::first-letter {
+    font-size: 3.5rem;
+}
+
+h3 {
+    color: rgb(201, 187, 68);
+    font-size: 1rem;
+    text-indent: 3rem;
+    letter-spacing: .2rem;
+    margin-left: 10vw;
+    padding-top: 2rem;
+    text-transform: uppercase;
+    background-color: rgb(255, 255, 255);
+    width: 80vw;
+    height: 20vh;
+    align-content: center;
+}
+
+body {
+    background-image: url(../images/line.png), url(../images/line.png), url(../images/flowers.jpg);
+    background-size: 100vw auto, 100vw auto, 100vw auto;
+    background-position: center 2vh, center 92vh, center top;
+    background-repeat: no-repeat;
+    background-color: rgb(255, 255, 255);
+}
+
+div.images img {
+    margin: auto;
+    height: 50vh;
+    border: .5rem solid rgba(201, 187, 68, .5);
+}
+
+img.divisor {
+    width: 90vw;
+    height: 30px;
+    margin: auto;
+    padding-bottom: 5rem;
+    display: block;
+
+}
+
+.images {
+    display: flex;
+    flex-flow: row wrap;
+    align-content: space-around;
+    justify-content: center;
+}
+
+p {
+    width: 60vw;
+    margin: auto;
+    padding: 4rem;
+    line-height: 2rem;
+}
+
+p.intro {
+    padding-bottom: 10rem;
+    background-color: rgb(255, 255, 255);
+}
+
+
+figure {
+    display: table;
+}
+
+figcaption {
+    margin: 1rem;
+    display: table-caption;
+    caption-side: bottom;
+}
