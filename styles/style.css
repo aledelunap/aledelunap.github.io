@@ -28,7 +28,7 @@ a {
 }
 
 a:hover {
-    color: red;
+    color: rgb(253, 90, 90);
 }
 
 h1::first-letter, h3::first-letter {
@@ -49,11 +49,20 @@ h3 {
     align-content: center;
 }
 
-body {
+.bg {
     background-image: url(../images/line.png), url(../images/line.png), url(../images/flowers.jpg);
-    background-size: 100vw auto, 100vw auto, auto 100vh;
+    background-size: 100vw auto, 100vw auto, cover;
     background-position: center 2vh, center 92vh, center top;
     background-repeat: no-repeat, no-repeat, repeat-x;
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    margin: 0;
     background-color: rgb(255, 255, 255);
 }
 
@@ -72,32 +81,10 @@ img.divisor {
 
 }
 
-.images {
-    display: flex;
-    flex-flow: row wrap;
-    align-content: space-around;
-    justify-content: center;
-}
-
 p {
     width: 60vw;
     margin: auto;
-    padding: 4rem;
-    line-height: 2rem;
-}
-
-p.intro {
+    padding: 5rem;
     padding-bottom: 10rem;
-    background-color: rgb(255, 255, 255);
-}
-
-
-figure {
-    display: table;
-}
-
-figcaption {
-    margin: 1rem;
-    display: table-caption;
-    caption-side: bottom;
+    line-height: 2rem;
 }
