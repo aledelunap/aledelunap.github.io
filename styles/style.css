@@ -51,7 +51,7 @@ h3 {
 
 body {
     background-image: url(../images/line.png), url(../images/line.png), url(../images/flowers.jpg);
-    background-size: 100vw auto, 100vw auto, auto 100vh;
+    background-size: 100vw auto, 100vw auto, 100vw auto;
     background-position: center 2vh, center 92vh, center top;
     background-repeat: no-repeat;
     background-color: rgb(255, 255, 255);
@@ -102,7 +102,7 @@ figcaption {
     caption-side: bottom;
 }
 
-@media (min-width: 1450px){
+@media (max-width: 2048){
     body {
     background-image: url(../images/line.png), url(../images/line.png), url(../images/flowers.jpg);
     background-size: 100vw auto, 100vw auto, 100vw auto;
