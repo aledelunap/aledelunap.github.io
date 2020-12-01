@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Research Projects</title>
+    <link
+      href="styles/otherstyle.css"
+      rel="stylesheet"
+      type="text/css"
+      media="all"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="images/Ale.png" />
+  </head>
+
+  <body>
+    <h1>Research Projects</h1>
+    <ul class="menu">
+      <li><a href="index.html">Main Page</a></li>
+      <li><a href="personalprojects.html">Personal Projects</a></li>
+      <li><a href="photography.html">Photography</a></li>
+    </ul>
+
+    <p>
+      I am currently working on two research projects. The first belongs to my
+      thesis project and the second one is a project that came from a final
+      assignment of a course. I now provide a brief description.
+    </p>
+
+    <h2>Jones Matrix Characterization via Evolutionary Strategies</h2>
+    <div class="project">
+      <p>
+        Jones calculus provides a robust and straightforward method to
+        characterize polarized light and polarizing optical systems using
+        two-element vectors (Jones vectors) and 2 x 2 matrices (Jones matrices),
+        respectively. Jones matrices are used to determine the retardance and
+        diattenuation introduced by an optical element or a sequence of
+        elements. Moreover, they are the tool of choice to study optical
+        geometric phases. However, the current sampling method for
+        characterizing the Jones matrix of an optical element is inefficient,
+        since the characterization of any given element is time-consuming. In
+        this study, we present an initial approach for solving the problem of
+        finding the eigenvectors that characterize the Jones matrix of a
+        homogeneous optical element through Evolutionary Strategies (ES). We
+        restrict our study to matrices with mutually orthogonal eigenvectors,
+        which in the context of polarized light, are named homogeneous Jones
+        matrices. We evaluate the analytical performance of an Evolutionary
+        Algorithm (EA) with a Polynomial Mutation operator and a Genetic
+        Algorithm (GA) with a Simulated Binary crossover operator and a
+        Polynomial Mutation operator, and compare the results with those
+        obtained through the traditional sampling method. The analytical results
+        show that both the EA and the GA out-performed the traditional sampling
+        method of 720 measurements, by requiring in average 103 and 179 fitness
+        functions measurements respectively, while having a perfect rate of
+        convergence.
+      </p>
+      <figure>
+        <img src="images/evolutionpoincare.gif" />
+        <figcaption>
+          <b>Figure 1.</b> Evolution of a population of polarization states over
+          the Poincare sphere using an Evolutionary Algorithm. As it can be
+          seen, the population evolves towards the global optima of the search
+          space.
+        </figcaption>
+      </figure>
+    </div>
+    <h2>A Multi-Verse Hyper Heuristic for Solving the Knapsack Problem</h2>
+    <div class="project">
+      <p>
+        Heuristics have proved to be a reliable technique for solving
+        challenging combinatorial optimization problems These heuristics are
+        customized for each particular problem domain and achieve good-quality
+        solutions under various scenarios. However, no single heuristic performs
+        the best on every instance of the problem. This fact opens the door for
+        methods such as the hyper-heuristics that combine the strengths of
+        single heuristics to build-up more competent solvers. In this work, we
+        present a novel hyper-heuristic model based on the multi-verse optimizer
+        for solving the knapsack problem. We tested the hyper-heuristic model on
+        a set of knapsack instances from different sources and compared its
+        performance against single heuristics and an evolutionary-based
+        hyper-heuristic approach taken from the literature. We obtained
+        promising results where the proposed approach outperformed both the
+        single heuristics and the evolutionary-based hyper-heuristic model.
+        These results support the idea that the multi-verse optimizer represents
+        a reliable strategy to produce hyper-heuristics for solving the knapsack
+        problem.
+      </p>
+      <figure>
+        <img src="images/heuristicselection.pdf" />
+        <figcaption>
+          <b>Figure 2.</b> Heuristic selection at three different stages of the
+          KP. Initially, the problem features maps to KP<sub>1</sub> and falls
+          closest to H<sub>1</sub>, so H<sub>1</sub> is used to select an item
+          for the knapsack. Then, with one less item to pick from, the KP maps
+          to KP<sub>2</sub> and still falls closest to H<sub>1</sub>, so H<sub
+            >1</sub
+          >
+          is used to pick the next item. Finally, the KP maps to KP<sub>3</sub>
+          and now H<sub>2</sub> is the closest heuristic and, therefore, H<sub
+            >3</sub
+          >
+          is used to pick the last item.
+        </figcaption>
+      </figure>
+    </div>
+    <img class="divisor" src="images/line.png" />
+  </body>
+</html>

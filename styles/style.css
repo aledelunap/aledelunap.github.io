@@ -1,90 +1,119 @@
 body {
-    font-family: 'Cardo:wght@400', serif;
+  font-family: "Cardo:wght@400", serif;
+  margin: 0;
+  background-color: rgb(255, 255, 255);
+  margin-bottom: 10rem;
 }
 
 h1 {
-    text-transform: uppercase;
-    font-family: 'Cardo:wght@700', serif;
-    font-size: 1.5rem;
-    letter-spacing: .4rem;
-    padding: 7vh 0vw 0vh 10vw;
-    color: rgb(255, 255, 248);
-    text-shadow: .5rem .5rem .5rem gray;
+  text-transform: uppercase;
+  font-family: "Cardo:wght@700", serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.4rem;
+  padding: 7vh 0vw 0vh 10vw;
+  color: rgb(255, 255, 248);
+  text-shadow: 0.5rem 0.5rem 0.5rem gray;
 }
 
 p.contact {
-    padding: 0vh 0vw 80vh 12vw;
-    font-size: 1.2rem;
-    font-weight: bold;
-    letter-spacing: .1rem;
-    background-color: transparent;
-    margin: 0;
-    color: rgb(255, 255, 248);
-    text-shadow: .2rem .2rem .5rem gray;
+  padding: 0vh 0vw 75.8vh 12vw;
+  font-size: 1.2rem;
+  font-weight: bold;
+  letter-spacing: 0.1rem;
+  background-color: transparent;
+  margin: 0;
+  line-height: 2rem;
+  color: rgb(255, 255, 248);
+  text-shadow: 0.2rem 0.2rem 0.5rem gray;
 }
 
-a {
-    color: rgb(255, 255, 248);
+p.contact a {
+  color: rgb(255, 255, 248);
 }
 
 a:hover {
-    color: rgb(253, 90, 90);
+  color: rgb(253, 90, 90);
 }
 
-h1::first-letter, h3::first-letter {
-    font-size: 3.5rem;
+h1::first-letter,
+h3::first-letter {
+  font-size: 3.5rem;
 }
 
 h3 {
-    color: rgb(201, 187, 68);
-    font-size: 1rem;
-    text-indent: 3rem;
-    letter-spacing: .2rem;
-    margin-left: 10vw;
-    padding-top: 2rem;
-    text-transform: uppercase;
-    background-color: rgb(255, 255, 255);
-    width: 80vw;
-    height: 10vh;
-    align-content: center;
+  color: rgb(201, 187, 68);
+  font-size: 1rem;
+  text-indent: 3rem;
+  letter-spacing: 0.2rem;
+  margin-left: 10vw;
+  padding-top: 2rem;
+  text-transform: uppercase;
+  background-color: rgb(255, 255, 255);
+  width: 80vw;
+  height: 10vh;
+  align-content: center;
 }
 
 .bg {
-    background-image: url(../images/line.png), url(../images/line.png), url(../images/flowers.jpg);
-    background-size: 100vw auto, 100vw auto, cover;
-    background-position: center 2vh, center 92vh, center top;
-    background-repeat: no-repeat, no-repeat, repeat-x;
-    z-index: -1;
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 100%;
-}
-
-body {
-    margin: 0;
-    background-color: rgb(255, 255, 255);
+  background-image: url(../images/line.png), url(../images/line.png),
+    url(../images/flowers.jpg);
+  background-size: 100vw auto, 100vw auto, cover;
+  background-position: center 2vh, center 92vh, center top;
+  background-repeat: no-repeat, no-repeat, repeat-x;
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  margin-bottom: 0;
 }
 
 div.images img {
-    margin: auto;
-    height: 50vh;
-    border: .5rem solid rgba(201, 187, 68, .5);
+  margin: auto;
+  height: 50vh;
+  border: 0.5rem solid rgba(201, 187, 68, 0.5);
 }
 
 img.divisor {
-    width: 90vw;
-    height: 30px;
-    margin: auto;
-    padding-bottom: 5rem;
-    display: block;
-
+  width: 90vw;
+  height: 30px;
+  margin: auto;
+  display: block;
 }
 
-p {
-    width: 60vw;
-    margin: auto;
-    padding: 5rem;
-    padding-bottom: 10rem;
-    line-height: 2rem;
+p.intro {
+  width: 40vw;
+  padding: 5rem;
+  line-height: 2rem;
+}
+
+#profile-pic {
+  max-height: 20rem;
+  padding: 2vw;
+}
+
+.bg-description {
+  display: flex;
+  align-content: space-around;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu a {
+  color: black;
+  display: flex;
+  justify-content: center;
+}
+
+ul.menu {
+  list-style-type: none;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  padding: 3rem;
+  letter-spacing: 0.25rem;
+  background-color: blanchedalmond;
+  box-shadow: 0.2rem 0.2rem 2rem rgba(0, 0, 0, 0.025);
+  margin: 0;
+  margin-bottom: 10rem;
 }
