@@ -29,13 +29,17 @@ h2 {
 }
 
 p {
-  padding: 5vh 10vw;
+  width: 50vw;
+  margin: auto;
+  padding-bottom: 5rem;
+  line-height: 2rem;
 }
 
 .project p {
   width: 60vw;
   padding: 0 3rem;
   line-height: 2rem;
+  margin: 0;
 }
 
 .menu a {
@@ -82,7 +86,7 @@ img.divisor {
 figcaption {
   width: 32rem;
   padding: 2rem;
-  text-align: center;
+  text-align: left;
 }
 
 .images {
@@ -90,6 +94,7 @@ figcaption {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
+  line-height: 1.5rem;
 }
 .images img {
   width: 30vw;
