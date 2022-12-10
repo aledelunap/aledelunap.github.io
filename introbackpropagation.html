@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Alejandra De Luna Pámanes</title>
+    <link href="style.css" rel="stylesheet" type="text/css" media="all" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="images/Ale.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"
+      integrity="sha384-Xi8rHCmBmhbuyyhbI88391ZKP2dmfnOl4rT9ZfRI7mLTdk1wblIUnrIq35nqwEvC"
+      crossorigin="anonymous"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"
+      integrity="sha384-X/XCfMm41VSsqRNQgDerQczD69XqmjOOOwYQvr/uuC+j4OPoNhVgjdGFwhvN02Ja"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"
+      integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false },
+          ],
+          throwOnError: false,
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div class="bio">
+      <h1 class="title">Alejandra De Luna Pámanes</h1>
+      <nav class="stroke">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li>
+            <a href="https://www.linkedin.com/in/alejandra-de-luna-pámanes"
+              >Linkedin</a
+            >
+          </li>
+        </ul>
+      </nav>
+      <hr
+        style="width: 900px; margin: 0 auto 3rem auto; color: rgb(65, 65, 64)"
+      />
+    </div>
+
+    <h1>A Gentle Introduction to the Mathematics of Back-Propagation</h1>
+
+    <p class="date">December 9, 2022</p>
+
+    <p>
+      We train neural networks to perform well at specific tasks by defining a
+      loss function. The loss function outputs a numeric score that describes
+      how good or bad the network is performing at a specific task. Commonly,
+      the loss function is denoted as $\mathcal{L}(y,\hat{y})$, where $\hat{y}$
+      is the output of the network given an observation $x$ and it's true label
+      $y$. Using an evaluation of the loss function we can improve the
+      predictions of a feed-forward neural network using the back-propagation
+      algorithm.
+    </p>
+
+    <p>
+      Usually, the back-propagation algorithm is explained for the simpler case
+      of the output layer and the last hidden layer and the reader is left to
+      understand how this logic propagates to the inner layers of the network.
+      Therefore, the aim of this post is to explain the back-propagation
+      algorithm in an accessible way, where you, the reader, will understand the
+      complete logic and math behind the algorithm. This post will be divided
+      into three main sections:
+    </p>
+
+    <ol>
+      <li>
+        <strong>Derivatives</strong> → In this first section, we will make a
+        quick recap on derivatives, since the way by which we can take advantage
+        of the evaluation of the loss function $\mathcal{L}(y,\hat{y})$, to
+        improve the predictions of a network has to do with derivatives.
+      </li>
+      <li>
+        <strong>A Neural's Network Structure</strong> → After we recap on how
+        derivatives are useful, we will set the mathematical foundations for how
+        we can define a simple neural network. The mathematical notation
+        introduced in this second section will be helpful to generalize the
+        notation in what follows.
+      </li>
+      <li>
+        <strong>The Back-Propagation Algorithm</strong> → Finally, we will be
+        ready to introduce the back-propagation algorithm.
+      </li>
+    </ol>
+
+    <p>Let's get started.</p>
+    <h2>Derivatives</h2>
+    <p>
+      Recalling a bit of calculus, the derivative of a function $f(x)$ tells us
+      how rapidly the function is changing, a property that can help us find the
+      minimizer $x^*$ of $f(x)$. The minimizer is defined such that $f(x^*)$ is
+      smaller than $f(x)$ for any value of $x$ different from $x^*$. In other
+      words, $f(x^*) f(x) \forall x \neq x^*$.
+    </p>
+
+    <p>
+      To clarify what a minimizer is, let's follow the example from
+      <a href="https://www.manning.com/books/inside-deep-learning"
+        >Edward Raff</a
+      >
+      and minimize the function $f(x) = (x - 2)^2$, shown below in Figure 1.
+    </p>
+
+    <figure>
+      <img
+        src="images/basicsofneuralnetworks/x-22.png"
+        style="width: 27vw"
+        alt="Function plot"
+      />
+      <figcaption><strong>Figure 1.</strong> $f(x) = (x-2)^2$</figcaption>
+    </figure>
+
+    <p>
+      Calculating the derivative we get $\mathrm{d}f/\mathrm{d}x=2x-4$. The
+      minimizer of a function exists at critical points, which are points where
+      $\mathrm{d}f/\mathrm{d}x$ evaluates to $0$. In this case, we get $2x-4=0$,
+      meaning the minimizer $x^*$ is equal to $2$. We can clearly confirm this
+      visually in Figure 2.
+    </p>
+
+    <figure>
+      <img
+        src="images/basicsofneuralnetworks/x-4.png"
+        style="width: 27vw"
+        alt="Function with derivative plot"
+      />
+      <figcaption>
+        <strong>Figure 2.</strong> $f(x) = (x-2)^2$ and $f'(x) = x-4$
+      </figcaption>
+    </figure>
+
+    <p>
+      So finding the minimizer $x^*$required us to compute the derivative of
+      $f(x)$ and solve for $\mathrm{d}f(x)/\mathrm{d}x = 0.$ Though, with more
+      complicated functions it is not as easy to solve for the minimizer.
+      Nonetheless, we can take a similar approach.
+    </p>
+
+    <p>
+      Let's assume we can't solve for $\mathrm{d}f(x)/\mathrm{d}x = 0$ but that
+      we have an initial guess $x^?$ . We can evaluate
+      $\mathrm{d}f(x^?)/\mathrm{d}x$ and determine how to adjust $x^?$ based on
+      the result and move closer to the minimizer. Returning to our previous
+      example, looking at $f(x)$ and $\mathrm{d}f(x)/\mathrm{d}x$, we can see
+      that when we are to the left of the minimizer
+      $\mathrm{d}f(x^?)/\mathrm{d}x < 0$ and when we are to the right of the
+      minimizer $\mathrm{d}f(x^?)/\mathrm{d}x > 0$. Only when we are exactly at
+      the minimum we get $\mathrm{d}f(x^?)/\mathrm{d}x=0$. So if after
+      evaluating our initial guess $x^?$ we get $\mathrm{d}f(x^?)/\mathrm{d}x <
+      0$, we need to increase the value of $x^?$, and if we get
+      $\mathrm{d}f(x^?)/\mathrm{d}x>0$, we need to decrease $x^?$. Thus we get
+      three simple rules:
+    </p>
+
+    <ul>
+      <li>$\mathrm{d}f(x^?)/\mathrm{d}x < 0$ → We increase $x^?$</li>
+      <li>$\mathrm{d}f(x)/\mathrm{d}x > 0$ → We decrease $x^?$</li>
+      <li>$\mathrm{d}f(x)/\mathrm{d}x = 0$ → We found the minimizer $x^*$</li>
+    </ul>
+
+    <p>
+      In other words, the sign of the derivative tells us towards which
+      direction we need to move to find the minimizer. Plus, the magnitude of
+      the gradient gives us an idea of how far we are from the minimizer. And
+      since we update $x^?$ in the opposite direction of
+      $\mathrm{d}f(x^?)/\mathrm{d}x$, we can update $x^?$ with respect to the
+      negative of $\mathrm{d}f(x^?)/\mathrm{d}x$, $$ x^? = x^? -
+      \frac{\mathrm{d}f(x^?)}{\mathrm{d}x}.$$
+    </p>
+
+    <p>
+      Therefore, we can iteratively evaluate and update the value of xᵍ towards
+      a closer value to $x^?$.
+    </p>
+
+    <p>
+      In this example we worked with a uni-variable function, though with neural
+      networks we work with multi-variable functions. So let's work with a
+      simple multi-variable function next. Given the function $f(x, y) = x\, y$,
+      we can calculate the partial derivative with respect to a single variable
+      taking the other variables as constants,
+      $$\frac{\partial{f(x,y)}}{\partial{x}} = y \quad \text{and} \quad
+      \frac{\partial{f(x,y)}}{\partial{y}} = x.$$
+    </p>
+    <p>
+      Taking the partial derivative with respect to each variable is known as
+      the gradient of a function, $$ \nabla f(x,y) = \left(
+      \frac{\partial{f(x,y)}}{\partial{x}}, \frac{\partial{f(x,y)}}{\partial{y}}
+      \right), $$ meaning the gradient points towards the direction of greatest
+      ascent of $f(x,y)$. In our example, we get $ \nabla f(x,y) = \left( y, x
+      \right).$ Also, note that the gradient can also be calculated for
+      univariate functions.
+    </p>
+
+    <p>
+      As before, we can use the partial derivatives with respect to each
+      variable (i.e. the gradient) to move towards the minimizer with respect to
+      every variable. So, as before, we update our guess $\left(x^?,y^?\right)$
+      with respect to the negative of the gradient, $$ \left(x^?,y^?\right) =
+      \left(x^?,y^?\right) - \nabla f(x,y)$$
+    </p>
+
+    <p>
+      Updating our guess $\left(x^?,y^?\right)$ and evaluating it repeatedly
+      until we find the minimizer or a good enough solution, gives us what is
+      known as gradient descent.
+    </p>
+
+    <h2>A Neural Network's Structure</h2>
+
+    <p>
+      Let's continue by reviewing the basic structure of a neural network by
+      building a simple feedforward neural network. As seen below in Figure 3,
+      our neural network takes as input a vector $\bm{x} = (x_0, x_1) \subset
+      \mathcal{R}^2 $, i.e. $x$ is a two-dimensional vector of real numbers. For
+      example we could have as input the values $\bm{x} = (87, 10)$. Generally
+      we refer to $\bm{x}$ as the input layer. Each element in the input layer
+      is fed to all neurons in the first hidden layer, composed of the set of
+      neurons $\bm{h}^{[1]} = \left\{\bm{n}_0^{[1]}, \bm{n}_1^{[1]}\right\}$,
+      where the under-scripts refer to a specific neuron and the super-scripts
+      denote the layer. At the end we have the output layer $\hat{y}$, which
+      outputs the prediction of our network.
+    </p>
+
+    <figure>
+      <img
+        src="images/basicsofneuralnetworks/basic_nn.png"
+        style="width: 550px"
+        alt="Basic feed-forward neural network"
+      />
+      <figcaption>
+        <b>Figure 3.</b> Simple feedforward neural network.
+      </figcaption>
+    </figure>
+
+    <p>
+      Neurons in all layers have forward weighted connections, meaning each
+      connection has an associated weight $w_{i,j}^{[l]}\, .$ Following our
+      simple network in Figure 3, both neurons in the input layer are connected
+      to the second neuron in the first hidden layer by the following set of
+      input weighted connections $\left\{w^{[1]}_{0,1},w^{[1]}_{1,1}\right\} \in
+      \bm{n}_1^{[l]}.$ As you can now probably infer, the super-script in each
+      weight references the layer of the incoming connection and the
+      under-script refers to the neurons being connected, with the order
+      indicating the direction of the connection. Also, since this network is
+      composed only of forward weighted connections, we have what is known as a
+      feed-forward neural network.
+    </p>
+
+    <p>
+      Each neuron is composed of a pre-activation $z$ and a non-linear
+      activation $a$, see Figure 4.
+    </p>
+
+    <figure>
+      <img
+        src="images/basicsofneuralnetworks/basic_nn_functions.png"
+        style="width: 550px"
+      />
+      <figcaption>
+        <strong>Figure 4.</strong> Each neuron in the hidden layer is composed
+        of a pre-activation $z$ and an activation $a$. In this case, the output
+        layer is only composed of the pre-activation.
+      </figcaption>
+    </figure>
+
+    <p>
+      The pre-activation $z_i^{[l]}$ is the sum of the incoming weighted
+      connections of a neuron. For example, for the same second neuron in the
+      first hidden layer $n_1^{[1]}$ we have $$ z_1^{[1]} = x_0 \cdot
+      w_{0,1}^{[1]} +x_1 \cdot w_{1,1}^{[1]} + b_1^{[1]} , $$ where the term
+      $b_1^{[1]}$ is a constant known as the bias, which defines the intercept
+      of $z_1^{[1]}$. Then, the activation $a_1^{[1]}$ is a non-linear
+      activation of the pre-activation $z_1^{[1]}$.
+    </p>
+    <p>
+      The pre-activation $z_i^{[l]}$ is followed by a non-linear activation
+      function that outputs the activation $a_i^{[l]}.$ For our neuron
+      $n_1^{[1]}$, we have $$ a_1^{[1]} = g\left(z^{[1]}_1\right), $$ where
+      $g(\cdot)$ is a non-linear function. The activation must be non-linear in
+      order to create a complex network. Otherwise, the network collapses to a
+      linear function, as we we would be simply performing multiplications with
+      constants over our input and summations of the results. For example,
+      imagine the neurons in our network are just composed of pre-activations
+      $z_i^{[l]}$ without the activations $a_i^{[l]}$. Then, we could write down
+      are network as $$ \begin{aligned} \hat{y} &= w_{0,0}^{[2]}
+      \left(w_{0,0}^{[1]} \cdot x_0 + w_{1,0}^{[0]} \cdot x_1\right) +
+      w_{1,0}^{[2]}\left(w_{0,1}^{[1]} \cdot x_0 + w_{1,1}^{[0]} \cdot
+      x_1\right),\\ &= \left( w_{0,0}^{[2]}\cdot w_{0,0}^{[1]} +
+      w_{1,0}^{[2]}\cdot w_{0,1}^{[1]} \right) \cdot x_0 + \left(
+      w_{0,0}^{[2]}\cdot w_{1,0}^{[1]} + w_{1,0}^{[2]}\cdot w_{1,1}^{[1]}
+      \right) \cdot x_1,\\ &= a \cdot x_0 + b \cdot x_1, \end{aligned} $$ where
+      both $a$ and $b$ are constants. Meaning that adding the non-linear
+      activation functions $g$ prevents the network from collapsing to a linear
+      function and creates a more complex function, $$ \hat{y} = w_{0,0}^{[2]}
+      \left( g\left(w_{0,0}^{[1]} \cdot x_0\ + w_{1,0}^{[0]} \cdot
+      x_1\right)\right) + w_{1,0}^{[2]}\left( g\left(w_{0,1}^{[1]} \cdot x_0 +
+      w_{1,1}^{[0]} \cdot x_1\right)\right), $$ where the non-linear activation
+      functions prevent the network from simplifying to a linear function.
+    </p>
+    <p>
+      Moving forward, let's define the non-linear function
+      $g\left(z_i^{[l]}\right).$ To simplify our explanation, we will define $g$
+      as the sigmoid activation function, $$ g\left(z_i^{[l]}\right) =
+      \frac{1}{1+ e^{-\gamma z_i^{[l]}}} \, , $$ and, again for simplicity, we
+      set $\gamma=1$. The sigmoid activation function has an S-shaped curve with
+      a domain in the real numbers and a range between 0 and 1, as seen in the
+      image Figure 5.
+    </p>
+
+    <figure>
+      <img
+        src="images/basicsofneuralnetworks/sigmoid_activation.png"
+        style="width: 320px"
+        alt="Sigmoid activation function"
+      />
+      <figcaption>
+        <strong>Figure 5.</strong> The sigmoid activation function.
+      </figcaption>
+    </figure>
+    <p>
+      In our bak-propagation algorithm we will need to compute the derivative of
+      $g$. So let's calculate it now and prevent from over complicating our
+      explanation later on. Taking the derivative of $g$ with resect to $z$, we
+      find $$ \begin{equation} \begin{aligned} \frac{\mathbb{d}
+      g(z)}{\mathbb{d}z} &= \frac{0 \cdot (1+e^{-z}) -
+      1\cdot(-e^{-z})}{(1+e^{-z})^2},\\ &= \frac{1}{1+e^{-z}}\left(
+      \frac{e^{-z}}{1+e^{-z}} \right),\\ &= \frac{1}{1+e^{-z}}\left( 1 -
+      \frac{1}{1+e^{-z}} \right),\\ &= g(z)(1-g(z)). \end{aligned}
+      \end{equation} $$ Remember, we will come back to this result later.
+    </p>
+    <p>
+      The activation function of the output layer $\hat{y}$ depends on the task
+      at hand. When the output layer does not have an activation function,
+      $\hat{y}$ simply corresponds to the pre-activation $z$. Since the sigmoid
+      activation function function evaluates to a real number between 0 and 1,
+      multiplying the activations of the last hidden layer by the set of weights
+      $\left\{w_{0,0}^{[2]}, \, w_{1,0}^{[2]}\right\}$ of the output layer and
+      adding the results gives a real number. In other words, the prediction
+      $\hat{y}$ is an element of the set of real numbers $\hat{y} \in
+      \mathcal{R}$. Meaning that a network with no activation in the output
+      layer will be useful for a regression task. As some writers like to say,
+      the attentive reader will have seen that our network has no activation
+      function in the output layer, so we have defined a network useful for a
+      regression task. On the contrary, when we do have an activation function,
+      we restrict the values of the output layer to the range of the selected
+      activation function $g$, creating a network useful for classification
+      tasks. As a side note, to keep things simple, we defined an output layer
+      composed of a single neuron, but a network can have multiple neurons in
+      the output layer if the task at hand requires so.
+    </p>
+
+    <p>And that's it, we have defined a simple feed-forward neural network.</p>
+
+    <h2>Evaluating A Neural Network</h2>
+    <p>
+      Now let's proceed to the main goal of this post. As stated in the
+      introduction, we define a loss function $\mathcal{L}(y, \hat{y})$ to see
+      how good or bad our network is. Intuitively, the loss is the difference
+      between the expected output $y$ and the output of the network $\hat{y}$.
+    </p>
+
+    <p>
+      A popular loss function is the squared error, defined as $$ \mathcal{L}(y,
+      \hat{y}) = \frac{1}{2} \left( y_i - \hat{y} \right) ^2,$$ where the factor
+      of $1/2$ is added for convenience when calculating the derivative. Observe
+      that the loss can only be calculated for the output layer.
+    </p>
+
+    <h2>Back-Propagation Algorithm</h2>
+
+    <h3>Generalizing A Neural Network</h3>
+
+    <p>
+      Now that we reviewed the general structure of a simple neural network and
+      got familiar with the notation, we generalize to a feed-forward neural
+      network of $L$ layers, each composed of $k$ neurons. In Figure 6, we
+      depict a pair of neurons $n_k^{[l-1]}$ and $n_j^{[l]}$ of this generalized
+      network, where we use the under-scripts $k$ and $j$ to refer to any neuron
+      from layers $l-1$ and $l$ respectively.
+    </p>
+
+    <figure>
+      <img
+        src="images/basicsofneuralnetworks/general_nn.png"
+        style="width: 750px"
+      />
+      <figcaption><b>Figure 6.</b></figcaption>
+    </figure>
+
+    <p>
+      For neuron $n_j^{[l]}$, we have a pre-activation $$ z_j^{[l]} = b_j^{[l]}
+      + \sum_{k=0}^{\left|\bm{h}^{l}\right|} w_{k,j}^{[l]} \cdot a_k^{[l-1]} ,
+      $$ where again the summation is over the activations from the set of
+      neurons in the previous hidden layer that feed neuron $n_j^{[l]}$. This
+      means that the pre-activation of $n_j^{[l]}$ depends on the activations
+      $a_k^{[l-1]}$ of all neurons in the last layer. In the Figure 6, we depict
+      the rest of the neurons in layer $l-1$ as the ellipsis points of the other
+      pair of incoming connections to neuron $n_j^{[l]}.$
+    </p>
+    <p>
+      The activation $a_k^{[l-1]}$ of a neuron $n_j^{[l]}$ in the previous layer
+      is defined as $$ a_k^{[l-1]} = g\left(z^{[l-1]}_k\right), $$ where
+      $g(\cdot)$ is the sigmoid activation function we defined earlier.
+    </p>
+
+    <h3>Back-Propagation</h3>
+
+    <p>
+      Remembering that the gradient helps us identify the global minimum of a
+      function, we can calculate the gradient of the loss $\mathcal{L}$ with
+      respect to any weight to improve the predictions of our network, $$ w
+      _{k,j}^{[l]} = w _{k,j}^{[l]} - \nabla_{k,j}^{[l]}\mathcal{L}, $$ where
+      the gradient operator $\nabla$ specifies with respect to which neuron we
+      are calculating the derivative and the parameter $\alpha$, known as the
+      learning rate, scales the magnitude of the change so that we can control
+      the rate of our update. In other words, this means that we can calculate
+      the gradient of $\mathcal{L}$ with respect to any weight in our network to
+      improve the error.
+    </p>
+
+    <p>
+      As we will see next, each weight impacts the prediction of the network
+      differently. For example, the error of a weight in the first hidden layer
+      propagates over all other neurons it is connected to until, from the next
+      neurons in the next layer until the prediction of the network. In
+      contrast, the error of a weight in the output layer just impacts the
+      prediction of the network. So as we have to update weights closer to the
+      input layer, we have to back-propagate the error over all of the paths the
+      weights has had an impact. As you guessed it, this is where the name of
+      the back-propagation algorithm comes from. To start simple, we will first
+      calculate an update of a weight in the output layer.
+    </p>
+
+    <h3>The Output Layer</h3>
+
+    <p>
+      We will start by computing one of the simplest updates of the network, the
+      update of a weight in the output layer $\hat{y}$. As seen in Figure 7, to
+      calculate $\Delta w_{j,0}^{[L]}$ we need to consider the relationship of
+      $\mathcal{L}$ with respect to $w_{j,0}^{[L]}$. In this case, the function
+      $z_0^{[L]}$.
+    </p>
+
+    <figure>
+      <img
+        src="images/basicsofneuralnetworks/gradient_output_layer.png"
+        style="width: 550px"
+      />
+      <figcaption><strong>Figure 7.</strong></figcaption>
+    </figure>
+
+    <p>
+      Using the chain rule, we can find the partial derivative of our composite
+      function as follows $$ \begin{equation} \frac{\partial
+      \mathcal{L}}{\partial w_{j,0}^{[L]}} = \frac{\partial
+      \mathcal{L}}{\partial z_0^{[L]}} \frac{\partial z_0^{[L]}}{\partial
+      w_{j,0}^{[L]}}\, . \end{equation} $$ Let's star by calculating the first
+      partial derivative, $$ \begin{equation} \begin{aligned} \frac{\partial
+      \mathcal{L}}{\partial z_0^{[L]}} &= \frac{\partial }{\partial
+      z_0^{[L]}}\left( \frac{1}{2} \left(y - z_0^{[L]}\right)^2 \right), \\ &= -
+      \left(y - z_0^{[L]}\right). \end{aligned} \end{equation} $$ Now the second
+      partial derivative, $$ \begin{aligned} \frac{\partial z_0^{[L]}}{\partial
+      w_{j,0}^{[L]}} &= a_j^{[L-1]} \cdot w_{j,0}^{[L]} + b_0^{[L]},\\ &=
+      a_j^{[L-1]}. \end{aligned} $$ Finally, we can calculate the update $\Delta
+      w_{j,0}^{[L]}$ as $$ \Delta w_{j,0}^{[L]} = \alpha \left(y_j -
+      z_0^{[L]}\right) \cdot a_j^{[L-1]}, $$ and update our weight
+      $w_{j,0}^{[L]} = w_{j,0}^{[L]} - \Delta w_{j,0}^{[L]}.$
+    </p>
+
+    <h3>The Last Hidden Layer</h3>
+
+    <p>
+      Continuing with a bit more complex derivation, we can proceed to calculate
+      an update to a weight $w_{k,j}^{[L-1]}$ in the last hidden layer
+      $\bm{h}^{[L-1]}$.
+    </p>
+
+    <figure>
+      <img
+        src="images/basicsofneuralnetworks/gradient_first_hidden_layer.png"
+        style="width: 800px"
+      />
+      <figcaption><strong>Figure 8.</strong></figcaption>
+    </figure>
+
+    <p>
+      Taking as a visual reference Figure 8, to update the weight
+      $w_{k,j}^{[L-1]}$, we need to compute $\partial \mathcal{L}/ \partial
+      w_{j,k}^{[L-1]}$ using the chain rule $$ \begin{equation} \frac{\partial
+      \mathcal{L}}{\partial w_{j,k}^{[L-1]}} = \frac{\partial
+      \mathcal{L}}{\partial z_0^{[L]}} \frac{\partial z_0^{[L]}}{\partial
+      a_j^{[L-1]}} \frac{\partial a_j^{[L-1]}}{\partial z_j^{[L-1]}}
+      \frac{\partial z_j^{[L-1]}}{\partial w_{k,j}^{[L-1]}}, \end{equation}$$
+      observe that $w_{j,0}^{[L]}$ is a constant in $z_0^{[L]}$.
+    </p>
+    <p>
+      We have already computed the first partial derivative in Equation 3, so we
+      proceed to compute the second partial derivative $$ \begin{equation}
+      \begin{aligned} \frac{\partial z_0^{[L]}}{\partial a_j^{[L-1]}} &=
+      a_j^{[L-1]} \cdot w_{j,0}^{[L]} + b_0^{[L]}, \\ &= w_{j,0}^{[L]} \, .
+      \end{aligned} \end{equation} $$ Then, for the third partial derivative,
+      recall that $a_j^{[L]}=g\left(z_j^{[L]}\right)$ is the sigmoid function
+      and we have already calculated its derivative in Equation 1. So in the
+      present set of variables, we have $$ \frac{\partial a_j^{[L-1]}}{\partial
+      z_j^{[L-1]}} = a_j^{[L-1]} \cdot \left(1-a_j^{[L-1]}\right). $$ Similarly,
+      we have already calculated the final partial derivative for the previous
+      layer, so updating the indices we get $$ \frac{\partial
+      z_j^{[L-1]}}{\partial w_{k,j}^{[L-1]}} = a_k^{[L-2]}. $$ Putting it all
+      together, we can update the weight $w_{k,j}^{[L-1]}$ as $$
+      \begin{equation}\Delta w_{k,j}^{[L-1]} = w_{j,0}^{[L]} \cdot a_j^{[L-1]}
+      \cdot \left(1-a_j^{[L-1]}\right) \cdot a_k^{[L-2]}. \end{equation}$$ Thus,
+      we can update all of the weights in the last hidden layer using Equation
+      6.
+    </p>
+
+    <h3>A Hidden Layer</h3>
+
+    <p>
+      Now we can approach the more complex case of updating a weight
+      $w_{k,j}^{[l]}$ in a hidden layer $l$. Having worked through the update of
+      the weight of the output layer and the weights of the first hidden layer,
+      we can follow a similar approach. Though, we now have to consider that
+      $w_{k,j}^{[l]}$ has an impact over more than one path, see Figure 9 below.
+    </p>
+
+    <figure>
+      <img
+        src="images/basicsofneuralnetworks/gradient_hidden_layer.png"
+        style="width: 650px"
+      />
+      <figcaption><strong>Figure 9.</strong></figcaption>
+    </figure>
+
+    <p>
+      Visually, we see that $w_{k,j}^{[l]}$ impacts all of the neurons it is
+      connected to in the next layer, and those neurons impact neurons in the
+      next layer and so on. So we need to see how the error produced by
+      $w_{k,j}^{[l]}$ has propagated into the next layers. Thus, to calculate
+      $\partial \mathcal{L}/ \partial w_{k,j}^{[l]}$ we have to consider all of
+      the different paths that lead to the prediction $\hat{y}$. Mathematically,
+      this amounts to an application of the chain rule, $$ \begin{equation}
+      \frac{\partial \mathcal{L}}{\partial w_{k,j}^{[l]}} =
+      \sum_{m=0}^{|\bm{h}^{l+1}|} \frac{\partial \mathcal{L}}{\partial
+      z_0^{[L]}} \frac{\partial z_j^{[L]}}{\partial a_k^{[L-1]}} \dots
+      \frac{\partial z_{m}^{[l+1]} }{\partial a_j^{[l]}} \frac{\partial
+      a_j^{[l]}}{\partial z_{j}^{[l]}} \frac{\partial z_j^{[l]}}{\partial
+      w_{k,j}^{[l]}}, \end{equation} $$ where $|\bm{h}^{l+1}|$ means the number
+      of neurons in the hidden layer, meaning we sum over all of the paths that
+      lead to $\hat{y}$ amd thus $\mathcal{L}$. Imagining we have already
+      calculated the gradients for the next layer, we can assume we have all of
+      the first terms in Equation 7, since they are part of the intermediate
+      steps to calculate the gradients. Remember how we used the terms
+      calculated for $\Delta w_{j,0}^{[L]}$ in the calculation for $\Delta
+      w_{k,j}^{[L-1]}$, see Equation 2 and 4 for reference. We will denote all
+      of these terms as $\delta$, $$ \begin{equation} \frac{\partial
+      \mathcal{L}}{\partial w_{k,j}^{[l]}} = \sum_{m=0}^{|\bm{h}^{l+1}|}
+      \delta_{j,m}^{[l+1]} \cdot \frac{\partial z_{m}^{[l+1]} }{\partial
+      a_j^{[l]}} \frac{\partial a_j^{[l]}}{\partial z_{j}^{[l]}} \frac{\partial
+      z_j^{[l]}}{\partial w_{k,j}^{[l]}}. \end{equation} $$ Continuing with our
+      calculation, remember we have already calculated the partial derivative
+      $\partial z_m^{[l+1]}/\partial a_j^{[l]}$ in Equation 5. Now we have the
+      same derivative but over all neurons in layer $l+1$, so we end up with the
+      summation of the weights of the layer $l+1$, $$ \frac{\partial
+      z_m^{[l+1]}}{\partial a_j^{[l]}} = \sum_{m=0}^{|\bm{h}^{l+1}|}
+      w_{j,m}^{[l+1]}, $$ where $w_{j,m}^{[l+1]}$ are the original weights and
+      not the updated values. Finally, we have already calculated the last pair
+      of terms previously. So similarly, we get $$ \frac{\partial
+      \mathcal{L}}{\partial w_{k,j}^{[l]}} = \sum_{m=0}^{|\bm{h}^{l+1}|}
+      \delta_{j,m}^{[l+1]} \cdot w_{j,m}^{[l+1]} \cdot a_k^{[l]} \cdot
+      (1-a_k^{[l]}) \cdot a_p^{[l-1]}. $$ We have arrived to the propagation of
+      the error $\mathcal{L}$ using the intermediate steps of the gradients for
+      the next layers.
+    </p>
+
+    <p>
+      Thus, we can now update the weights of our network. Though, this
+      represents a single update of the weights, iteratively using the
+      back-propagation algorithm, we can minimize $\mathcal{L}.$
+    </p>
+
+    <h2>Conclusion</h2>
+    <p>
+      Hopefully, now you have a clearer understanding of the workings of the
+      back-propagation algorithm. So I want to conclude with a final
+      observation. The error $\mathcal{L}$ depends on the specific observation
+      $\bm{x}$ we made a prediction on. Here, in the development of the
+      back-propagation algorithm, we did not give too much attention to the
+      input of the network. We used the back-propagation algorithm to update the
+      weights of our network with a single observation $\bm{x}$, the true target
+      $y$ and the prediction $\hat{y}$. Though, we want a neural network to make
+      reliable predictions given new observations. So, in reality, we need a set
+      of observations $X$ and the respective targets $Y$ to train a network to
+      generalizes well and so the network learns the distribution of the
+      training data and not a single observation.
+    </p>
+  </body>
+
+  <script
+    src="https://utteranc.es/client.js"
+    repo="aledelunap/aledelunap.github.io"
+    issue-term="pathname"
+    label="✨ 💬 ✨"
+    theme="github-light"
+    crossorigin="anonymous"
+    async
+  ></script>
+</html>
