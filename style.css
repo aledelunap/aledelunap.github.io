@@ -203,3 +203,10 @@ nav.stroke ul li:before {
 
 }
 
+a.post { 
+  text-decoration: none;
+}  
+
+a.post:hover h2, a.post:hover  p{
+  color: rgb(141, 141, 141);
+}
